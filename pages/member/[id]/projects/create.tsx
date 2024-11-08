@@ -8,9 +8,9 @@ import {
 import useSWR from "swr";
 
 export default function NewProject() {
-  function handleSubmit(event) {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const formData = new FormData(event.target);
+    const formData = new FormData(event.target as HTMLFormElement);
     const data = Object.fromEntries(formData);
     console.log(data);
 

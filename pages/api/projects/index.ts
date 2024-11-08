@@ -4,7 +4,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { Project } from "@/db/models/Project";
 
 type Data = {
-  name: string;
+  [key: string]: any;
 };
 
 export default async function handler(
@@ -14,7 +14,8 @@ export default async function handler(
   await dbConnect();
 
   if (req.method === "GET") {
-    const projects = await Project.find();
+    const projects: Data[] = await Project.find();
+    console.log("HERE", projects);
     res.status(200).json(projects);
   }
 }
