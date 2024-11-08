@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 
 export function NavBar() {
   return (
-    <header>
+    <header className="p-4">
       <nav>
         <ul className="flex justify-between">
           <li>Logo</li>
