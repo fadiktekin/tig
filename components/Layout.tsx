@@ -1,7 +1,12 @@
 import { NavBar } from "./NavBar";
 import { Footer } from "./Footer";
+import { MouseEventHandler } from "react";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+type Props = {
+  children: React.ReactNode;
+};
+
+export default function Layout({ children }: Props) {
   return (
     <>
       <NavBar />
