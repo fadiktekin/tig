@@ -7,9 +7,32 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Button,
+  CardContent,
+  Card,
+  CardActions,
+  Typography,
 } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { ChangeEvent, useState } from "react";
+import { PhotoUploader } from "@/components/PhotoUploader";
+
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
 
 function NewProject() {
+  const [showPhotoUploader, setShowPhotoUploader] = useState(false);
+
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.target as HTMLFormElement);
@@ -19,35 +42,74 @@ function NewProject() {
     try {
     } catch (error) {}
   }
+
+  function handleFileUploadChange() {
+    setShowPhotoUploader(!showPhotoUploader);
+  }
+
   return (
     <Layout>
-      <form className="flex flex-col gap-1 w-60" onSubmit={handleSubmit}>
-        <TextField variant="filled" id="title" label="id" name={"title"} />
-        <TextField
-          variant="filled"
-          label="description"
-          name={"description"}
-          multiline
-        />
-        <FormControl variant="filled">
-          <InputLabel id="demo-simple-select-standard-label">Age</InputLabel>
-          <Select
-            labelId="demo-simple-select-standard-label"
-            id="demo-simple-select-standard"
-            name="age"
-            value={10}
-            label="Age"
+      <div className="flex items-start justify-between">
+        <Card className="min-w-96">
+          <CardContent>
+            <Typography variant="h6" className="pb-3">
+              Project Details
+            </Typography>
+            <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
+              <TextField
+                variant="outlined"
+                id="title"
+                label="id"
+                name={"title"}
+              />
+              <TextField
+                variant="outlined"
+                label="description"
+                name={"description"}
+                multiline
+              />
+              <FormControl variant="outlined">
+                <InputLabel id="demo-simple-select-standard-label">
+                  Age
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-standard-label"
+                  id="demo-simple-select-standard"
+                  name="age"
+                  value={10}
+                  label="Age"
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value={10}>Ten</MenuItem>
+                  <MenuItem value={20}>Twenty</MenuItem>
+                  <MenuItem value={30}>Thirty</MenuItem>
+                </Select>
+              </FormControl>
+
+              <Button component="button" type="submit" variant="contained">
+                Submit
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+        <div className="flex flex-col gap-4">
+          <Button
+            component="label"
+            role={undefined}
+            variant="contained"
+            tabIndex={-1}
+            onClick={() => handleFileUploadChange()}
+            startIcon={<CloudUploadIcon />}
           >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
-          </Select>
-        </FormControl>
-        <button type="submit">Submit</button>
-      </form>
+            Upload files
+          </Button>
+          {showPhotoUploader && (
+            <PhotoUploader onClose={() => setShowPhotoUploader(false)} />
+          )}
+        </div>
+      </div>
     </Layout>
   );
 }
