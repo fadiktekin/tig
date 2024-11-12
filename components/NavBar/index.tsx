@@ -2,10 +2,12 @@ import React from "react";
 
 import { Button } from "@mui/material";
 import { useRouter } from "next/navigation";
-import NextLink from "next/link";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 
 export function NavBar() {
+  const { status, data: session } = useSession();
+  const isAuthenticated = status === "authenticated";
   const router = useRouter();
   return (
     <header className="px-4 bg-white w-full border-2 border-t-grey-50">
@@ -28,20 +30,42 @@ export function NavBar() {
                 Projects
               </Button>
             </li>
+            {!isAuthenticated && (
+              <li>
+                <Button
+                  color="secondary"
+                  variant="contained"
+                  onClick={() => router.push("/login")}
+                >
+                  Log in
+                </Button>
+              </li>
+            )}
             <li>
               <Button
-                color="secondary"
                 variant="contained"
-                onClick={() => router.push("/login")}
+                onClick={() => router.push("/member/projects/create")}
               >
-                Log in
-              </Button>
-            </li>
-            <li>
-              <Button variant="contained" onClick={() => router.push("/login")}>
                 Add Project
               </Button>
             </li>
+            {isAuthenticated && (
+              <li>
+                <Button
+                  color="secondary"
+                  variant="contained"
+                  onClick={() => router.push("/member/dashboard")}
+                >
+                  <Image
+                    className="rounded-full"
+                    src={(session as any).user.image}
+                    width={25}
+                    height={25}
+                    alt="logo"
+                  />
+                </Button>
+              </li>
+            )}
           </div>
         </ul>
       </nav>
