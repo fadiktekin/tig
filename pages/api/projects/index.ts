@@ -15,7 +15,6 @@ export default async function handler(
 
   if (req.method === "GET") {
     const projects: Data[] = await Project.find();
-    console.log("HERE", projects);
     res.status(200).json(projects);
   }
 }

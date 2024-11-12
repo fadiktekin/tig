@@ -10,7 +10,6 @@ export function withAuth(Component: NextComponentType) {
     console.log("WithAuth");
 
     if (status === "unauthenticated") {
-      console.log("HERE");
       return router.push("/login");
     }
 

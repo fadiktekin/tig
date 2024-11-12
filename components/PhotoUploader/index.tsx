@@ -54,16 +54,23 @@ export function PhotoUploader({ onClose }: { onClose: Function }) {
     );
   }
 
-  function handleUpload() {
+  async function handleUpload() {
     const formData = new FormData();
     for (const file of files) {
       formData.append("file", file);
-
-      console.log(file);
+      formData.append("upload_preset", "amx9xk3g");
+      const response = await fetch(
+        "https://api.cloudinary.com/v1_1/dndvtlb1u/image/upload",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const data = await response.json();
+      console.log(data);
     }
-    formData.append("upload_preset", "<upload preset>");
-    console.log(formData);
   }
+
   return (
     <Dialog open>
       <div className="flex">
