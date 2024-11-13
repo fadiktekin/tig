@@ -18,7 +18,8 @@ export function NavBar() {
             width={100}
             height={100}
             alt="logo"
-            style={{ objectFit: "contain" }}
+            priority
+            style={{ objectFit: "contain", width: "auto", height: "auto" }}
           />
           <div className="flex justify-between gap-2">
             <li>

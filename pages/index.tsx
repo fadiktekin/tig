@@ -14,11 +14,8 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-async function fetcher(...args: Parameters<typeof fetch>) {
-  return (await fetch(...args)).json();
-}
 export default function Home() {
-  const { data, error, isLoading } = useSWR("/api/projects", fetcher);
+  const { data, error, isLoading } = useSWR("/api/projects");
 
   if (error) return <div>failed to load</div>;
   if (isLoading) return <div>loading...</div>;
