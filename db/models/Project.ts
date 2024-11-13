@@ -5,11 +5,12 @@ import { User } from "./User";
 const { Schema } = mongoose;
 
 const projectSchema = new Schema({
-  title: { type: String, required: true },
+  title: { type: String },
   craft: { type: Schema.Types.ObjectId, ref: "Craft" },
   startDate: { type: String },
   endDate: { type: String },
-  user: { type: Schema.Types.ObjectId, ref: "User" },
+  userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  images: { type: [String] },
 });
 
 export const Project =

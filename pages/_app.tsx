@@ -3,6 +3,7 @@ import { SessionProvider } from "next-auth/react";
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { SWRConfig } from "swr";
 
 const theme = createTheme({
   palette: {
@@ -20,13 +21,21 @@ const theme = createTheme({
     },
   },
 });
+
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <SessionProvider session={pageProps.session}>
       <ThemeProvider theme={theme}>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        <SWRConfig
+          value={{
+            fetcher: (resource, init) =>
+              fetch(resource, init).then((res) => res.json()),
+          }}
+        >
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </SWRConfig>
       </ThemeProvider>
     </SessionProvider>
   );

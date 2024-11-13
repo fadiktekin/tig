@@ -10,13 +10,13 @@ import {
   Button,
   CardContent,
   Card,
-  CardActions,
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import { PhotoUploader } from "@/components/PhotoUploader";
+import Image from "next/image";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -32,6 +32,7 @@ const VisuallyHiddenInput = styled("input")({
 
 function NewProject() {
   const [showPhotoUploader, setShowPhotoUploader] = useState(false);
+  const [images, setImages] = useState([]);
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -106,8 +107,23 @@ function NewProject() {
             Upload files
           </Button>
           {showPhotoUploader && (
-            <PhotoUploader onClose={() => setShowPhotoUploader(false)} />
+            <PhotoUploader
+              setImages={setImages}
+              onClose={() => setShowPhotoUploader(false)}
+            />
           )}
+          {
+            <Card className="flex gap-1">
+              {images.map((image: string) => (
+                <Image
+                  width={100}
+                  height={100}
+                  src={image}
+                  alt="project image"
+                />
+              ))}
+            </Card>
+          }
         </div>
       </div>
     </Layout>

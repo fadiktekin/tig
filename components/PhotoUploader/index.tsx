@@ -10,6 +10,7 @@ import {
   CardContent,
   CardActions,
   IconButton,
+  CircularProgress,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -17,6 +18,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Image from "next/image";
 import { styled } from "@mui/material/styles";
 import { ChangeEvent, SetStateAction, useState } from "react";
+import { useSession } from "next-auth/react";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -29,9 +31,18 @@ const VisuallyHiddenInput = styled("input")({
   whiteSpace: "nowrap",
   width: 1,
 });
-export function PhotoUploader({ onClose }: { onClose: Function }) {
+export function PhotoUploader({
+  onClose,
+  setImages,
+}: {
+  onClose: Function;
+  setImages: Function;
+}) {
+  const { data: session } = useSession();
   const [imageSrc, setImageSrc] = useState<string[]>([]);
   const [files, setFiles] = useState<any>();
+  const [uploadInProgress, setUploadInProgress] = useState(false);
+  console.log(session);
 
   function handleFileUploadChange(changeEvent: ChangeEvent) {
     const files = (changeEvent.target as HTMLInputElement).files || [];
@@ -55,6 +66,7 @@ export function PhotoUploader({ onClose }: { onClose: Function }) {
   }
 
   async function handleUpload() {
+    setUploadInProgress(true);
     const formData = new FormData();
     for (const file of files) {
       formData.append("file", file);
@@ -67,13 +79,28 @@ export function PhotoUploader({ onClose }: { onClose: Function }) {
         }
       );
       const data = await response.json();
-      console.log(data);
+
+      setImages((images: any) => [...images, data.secure_url]);
+
+      const projectData = {
+        imageUrl: data.secure_url,
+        userId: (session?.user as any).id,
+      };
+
+      await fetch("/api/member/projects/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(projectData),
+      });
     }
+    setUploadInProgress(false);
   }
 
   return (
     <Dialog open>
-      <div className="flex">
+      <div className="flex justify-between p-2">
         <DialogTitle>Upload Photos</DialogTitle>
         <IconButton aria-label="close" onClick={() => onClose()}>
           <CloseIcon />
@@ -90,6 +117,11 @@ export function PhotoUploader({ onClose }: { onClose: Function }) {
                     alt="Image upload"
                     width={200}
                     height={200}
+                    style={{
+                      objectFit: "contain",
+                      width: "auto",
+                      height: "auto",
+                    }}
                   />
                   <IconButton aria-label="delete" onClick={() => onDelete(img)}>
                     <DeleteIcon />
@@ -100,7 +132,7 @@ export function PhotoUploader({ onClose }: { onClose: Function }) {
           )}
         </div>
 
-        <div className="flex gap-4">
+        <div className="flex gap-4 justify-end">
           <Button
             component="label"
             variant="contained"
@@ -114,13 +146,22 @@ export function PhotoUploader({ onClose }: { onClose: Function }) {
               multiple
             />
           </Button>
-          <Button
-            variant="contained"
-            size="small"
-            onClick={() => handleUpload()}
-          >
-            Done
-          </Button>
+          <div className="relative">
+            <Button
+              disabled={uploadInProgress}
+              variant="contained"
+              size="small"
+              onClick={() => handleUpload()}
+            >
+              Done
+            </Button>
+            {uploadInProgress && (
+              <CircularProgress
+                className="absolute top-1/2 left-1/2 text-gunmetal ml-[-12px] mt-[-12px]"
+                size={24}
+              />
+            )}
+          </div>
         </div>
       </DialogContent>
     </Dialog>
