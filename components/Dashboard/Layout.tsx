@@ -6,9 +6,9 @@ type Props = {
 
 export function Layout({ children }: Props) {
   return (
-    <section className="flex flex-column h-full w-full">
+    <section className="flex flex-column h-full w-full justify-start">
       <Menu />
-      <main className="p-4 w-full">{children}</main>
+      <div className="p-4 w-full min-w-80">{children}</div>
     </section>
   );
 }

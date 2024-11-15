@@ -18,7 +18,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Image from "next/image";
 import { styled } from "@mui/material/styles";
 import { ChangeEvent, SetStateAction, useState } from "react";
-import { useSession } from "next-auth/react";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -31,18 +30,11 @@ const VisuallyHiddenInput = styled("input")({
   whiteSpace: "nowrap",
   width: 1,
 });
-export function PhotoUploader({
-  onClose,
-  setImages,
-}: {
-  onClose: Function;
-  setImages: Function;
-}) {
-  const { data: session } = useSession();
-  const [imageSrc, setImageSrc] = useState<string[]>([]);
+export function PhotoUploader({ onClose }: { onClose: Function }) {
+  const [imagePreviewSrc, setImagePreviewSrc] = useState<string[]>([]);
   const [files, setFiles] = useState<any>();
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [uploadInProgress, setUploadInProgress] = useState(false);
-  console.log(session);
 
   function handleFileUploadChange(changeEvent: ChangeEvent) {
     const files = (changeEvent.target as HTMLInputElement).files || [];
@@ -51,7 +43,7 @@ export function PhotoUploader({
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => {
-        setImageSrc((imgs: any) => [...imgs, reader.result]);
+        setImagePreviewSrc((imgs: any) => [...imgs, reader.result]);
       };
       reader.onerror = () => {
         console.log(reader.error);
@@ -60,14 +52,15 @@ export function PhotoUploader({
   }
 
   function onDelete(imgDataUrl: string) {
-    setImageSrc((prevImageSrc) =>
+    setImagePreviewSrc((prevImageSrc) =>
       prevImageSrc.filter((img) => img !== imgDataUrl)
     );
   }
 
-  async function handleUpload() {
+  async function handleUploadToCloudinary() {
     setUploadInProgress(true);
     const formData = new FormData();
+    const uploadedImages: string[] = [];
     for (const file of files) {
       formData.append("file", file);
       formData.append("upload_preset", "amx9xk3g");
@@ -79,22 +72,9 @@ export function PhotoUploader({
         }
       );
       const data = await response.json();
-
-      setImages((images: any) => [...images, data.secure_url]);
-
-      const projectData = {
-        imageUrl: data.secure_url,
-        userId: (session?.user as any).id,
-      };
-
-      await fetch("/api/member/projects/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(projectData),
-      });
+      uploadedImages.push(data.secure_url);
     }
+    setImageUrls(uploadedImages);
     setUploadInProgress(false);
   }
 
@@ -102,15 +82,15 @@ export function PhotoUploader({
     <Dialog open>
       <div className="flex justify-between p-2">
         <DialogTitle>Upload Photos</DialogTitle>
-        <IconButton aria-label="close" onClick={() => onClose()}>
+        <IconButton aria-label="close" onClick={() => onClose(imageUrls)}>
           <CloseIcon />
         </IconButton>
       </div>
       <DialogContent>
         <div className="border-dashed border-2 border-teaRoseSecondary p-4 mb-4">
-          {!!imageSrc.length && (
+          {!!imagePreviewSrc.length && (
             <div className="flex flex-col gap-4">
-              {imageSrc.map((img) => (
+              {imagePreviewSrc.map((img) => (
                 <div className="flex" key={img}>
                   <Image
                     src={img}
@@ -151,7 +131,7 @@ export function PhotoUploader({
               disabled={uploadInProgress}
               variant="contained"
               size="small"
-              onClick={() => handleUpload()}
+              onClick={() => handleUploadToCloudinary()}
             >
               Done
             </Button>
