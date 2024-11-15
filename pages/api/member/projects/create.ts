@@ -9,27 +9,20 @@ export default async function handler(
   if (req.method === "POST") {
     try {
       const projectData = req.body;
-      const project = await Project.findOne({ userId: projectData.userId });
-      if (project === null) {
-        return await Project.create({
-          images: [projectData.imageUrl],
-          userId: projectData.userId,
-        });
-      }
+      await Project.create({
+        images: projectData.images,
+        userId: projectData.userId,
+        ...projectData,
+      });
 
-      const projectImages = project.images;
-      console.log(projectImages);
-      if (!projectImages.includes(projectData.imageUrl)) {
-        project.images.push(projectData.imageUrl);
-        await project.save();
-        // const project = await Project.findOneAndUpdate(
-        //   { userId: projectData.userId },
-        //   {
-        //     $push: { images: projectData.imageUrl },
-        //   }
-        // );
-      }
-
+      // const newImages = projectData.images;
+      // const existingImages = project.images;
+      // newImages.map(async (newImage: string) => {
+      //   if (!existingImages.includes(newImage)) {
+      //     project.images.push(newImage);
+      //   }
+      // });
+      // await project.save();
       res.status(201).json({ status: "Project created" });
     } catch (error: any) {
       res.status(400).json({ error: error.message });
