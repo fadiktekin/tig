@@ -2,8 +2,9 @@ import useSWR from "swr";
 import { withAuth } from "@/components/withAuth";
 import { useSession } from "next-auth/react";
 import { Layout } from "@/components/Dashboard/Layout";
-import { Card } from "@mui/material";
+import { Card, Typography } from "@mui/material";
 import Image from "next/image";
+import { ProjectCard } from "@/components/ProjectCard";
 
 function Projects() {
   const { data: session } = useSession();
@@ -19,14 +20,12 @@ function Projects() {
   }
   return (
     <Layout>
-      I'm members projects
-      {userProjects.map((project: any) => (
-        <Card className="flex gap-1">
-          {project.images.map((image: string) => (
-            <Image width={100} height={100} src={image} alt="project image" />
-          ))}
-        </Card>
-      ))}
+      My projects
+      <section className="gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {userProjects.map((project: any) => (
+          <ProjectCard project={project} />
+        ))}
+      </section>
     </Layout>
   );
 }
