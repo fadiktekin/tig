@@ -1,5 +1,7 @@
 export function Menu() {
   return (
-    <aside className=" w-24 h-full bg-creamBackgroundTertiary p-4">Menu</aside>
+    <aside className=" w-24 h-full bg-creamBackgroundTertiary p-4 border-2 border-r-accent">
+      Menu
+    </aside>
   );
 }

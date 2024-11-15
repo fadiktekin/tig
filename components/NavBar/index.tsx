@@ -10,7 +10,7 @@ export function NavBar() {
   const isAuthenticated = status === "authenticated";
   const router = useRouter();
   return (
-    <header className="px-4 bg-white w-full border-2 border-t-grey-50">
+    <header className="px-4 bg-white w-full border-2 border-b-teaRoseSecondary">
       <nav>
         <ul className="flex justify-between items-center">
           <Image
