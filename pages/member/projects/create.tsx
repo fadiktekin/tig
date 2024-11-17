@@ -18,23 +18,10 @@ import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { ProjectCreateForm } from "@/components/ProjectCreateForm";
 
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
-  height: 1,
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
-});
-
 function NewProject() {
   const { data: session } = useSession();
   const [showPhotoUploader, setShowPhotoUploader] = useState(false);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
-  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isPublished, setIsPublished] = useState(false);
 
