@@ -9,12 +9,10 @@ import {
   CircularProgress,
   Alert,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useState } from "react";
 import { PhotoUploader } from "@/components/PhotoUploader";
 import Image from "next/image";
-import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { ProjectCreateForm } from "@/components/ProjectCreateForm";
 
