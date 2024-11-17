@@ -1,12 +1,13 @@
 import mongoose from "mongoose";
-import { Craft } from "./Craft";
 import { User } from "./User";
 
 const { Schema } = mongoose;
 
 const projectSchema = new Schema({
   title: { type: String },
-  craft: { type: Schema.Types.ObjectId, ref: "Craft" },
+  description: { type: String },
+  craft: { type: String },
+  status: { type: String },
   startDate: { type: String },
   endDate: { type: String },
   userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
