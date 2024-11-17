@@ -25,11 +25,11 @@ export default function Home() {
     <div
       className={`${geistSans.variable} ${geistMono.variable} grid grid-rows-[20px_1fr_20px] justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]`}
     >
-      <div className="flex gap-8">
+      <section className="gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {data.map((project: { title: string; _id: string }) => {
           return <ProjectCard key={project._id} project={project} />;
         })}
-      </div>
+      </section>
     </div>
   );
 }

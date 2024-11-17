@@ -20,7 +20,6 @@ export function Menu() {
     setSelectedIndex(index);
   };
 
-  console.log(selectedIndex);
   return (
     <aside className="h-full bg-creamBackgroundTertiary border-2 border-r-accent">
       <List component="nav" aria-label="main projects settings">
