@@ -1,14 +1,24 @@
 import React from "react";
 
-import { Button } from "@mui/material";
+import { Button, Menu, MenuItem } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
 
 export function NavBar() {
-  const { status, data: session } = useSession();
-  const isAuthenticated = status === "authenticated";
   const router = useRouter();
+  const { status, data: session } = useSession();
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  const open = Boolean(anchorEl);
+  const isAuthenticated = status === "authenticated";
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   return (
     <header className="px-4 bg-white w-full border-2 border-b-teaRoseSecondary">
       <nav>
@@ -55,7 +65,11 @@ export function NavBar() {
                 <Button
                   color="secondary"
                   variant="contained"
-                  onClick={() => router.push("/member/dashboard")}
+                  id="user-button"
+                  aria-controls={open ? "basic-menu" : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={open ? "true" : undefined}
+                  onClick={handleClick}
                 >
                   <Image
                     className="rounded-full"
@@ -65,6 +79,33 @@ export function NavBar() {
                     alt="logo"
                   />
                 </Button>
+                <Menu
+                  id="basic-menu"
+                  className="teaRoseSecondary"
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                  MenuListProps={{
+                    "aria-labelledby": "user-button",
+                  }}
+                >
+                  <MenuItem
+                    onClick={() => {
+                      router.push("/member/dashboard");
+                      handleClose();
+                    }}
+                  >
+                    Dashboard
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      signOut({ callbackUrl: "/" });
+                      handleClose();
+                    }}
+                  >
+                    Logout
+                  </MenuItem>
+                </Menu>
               </li>
             )}
           </div>
