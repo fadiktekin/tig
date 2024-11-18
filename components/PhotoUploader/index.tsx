@@ -18,7 +18,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Image from "next/image";
 import { styled } from "@mui/material/styles";
 import { ChangeEvent, useState } from "react";
-import { getImagePreviewsFromFiles } from "@/pages/member/projects/getImagePreviewsFromFiles";
+import { getImagePreviewsFromFiles } from "@/components/utils/getImagePreviewsFromFiles";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",

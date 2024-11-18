@@ -15,7 +15,7 @@ import { PhotoUploader } from "@/components/PhotoUploader";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { ProjectCreateForm } from "@/components/ProjectCreateForm";
-import { getImagePreviewsFromFiles } from "./getImagePreviewsFromFiles";
+import { getImagePreviewsFromFiles } from "../../../components/utils/getImagePreviewsFromFiles";
 
 function NewProject() {
   const { data: session } = useSession();
