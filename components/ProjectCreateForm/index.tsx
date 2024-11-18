@@ -13,20 +13,27 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+
 type Props = {
   handleSubmit: FormEventHandler<HTMLFormElement>;
 };
+
+type FromDataType = {
+  status?: string;
+  craft?: string;
+};
 export function ProjectCreateForm({ handleSubmit }: Props) {
-  const [craft, setCraft] = useState("");
-  const [status, setStatus] = useState("");
+  const [formData, setFormData] = useState<FromDataType>({});
 
-  const handleCraftChange = (event: SelectChangeEvent) => {
-    setCraft(event.target.value as string);
+  const handleChange = (event: SelectChangeEvent) => {
+    const { name, value } = event.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
-  const handleStatusChange = (event: SelectChangeEvent) => {
-    setStatus(event.target.value as string);
-  };
   const router = useRouter();
   return (
     <form className="flex flex-col items-end gap-4" onSubmit={handleSubmit}>
@@ -56,9 +63,10 @@ export function ProjectCreateForm({ handleSubmit }: Props) {
                 labelId="craft"
                 id="option-crochet"
                 name="craft"
-                value={craft}
+                value={formData.craft}
                 label="Crochet"
-                onChange={handleCraftChange}
+                onChange={handleChange}
+                required
               >
                 <MenuItem value={"crochet"}>Crochet</MenuItem>
                 <MenuItem value={"knitting"}>Knitting</MenuItem>
@@ -72,14 +80,19 @@ export function ProjectCreateForm({ handleSubmit }: Props) {
                 labelId="status"
                 id="option-inprogress"
                 name="status"
-                value={status}
+                value={formData.status}
                 label="In Progress"
-                onChange={handleStatusChange}
+                onChange={handleChange}
+                required
               >
-                <MenuItem value={"inprogress"}>In Progress</MenuItem>
+                <MenuItem value={"in progress"}>In Progress</MenuItem>
                 <MenuItem value={"finished"}>Finished</MenuItem>
               </Select>
             </FormControl>
+            <DatePicker label="Start date" name="startDate" />
+            <DatePicker label="End date" name="endDate" />
+            <TextField label="Expense" name="espense" type="number" />
+            <TextField label="Price" name="price" type="number" />
           </CardContent>
         </Card>
       </div>

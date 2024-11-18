@@ -12,6 +12,8 @@ const projectSchema = new Schema({
   endDate: { type: String },
   userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
   images: { type: [String] },
+  expense: { type: String },
+  price: { type: String },
 });
 
 export const Project =
