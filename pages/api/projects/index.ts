@@ -14,7 +14,7 @@ export default async function handler(
   await dbConnect();
 
   if (req.method === "GET") {
-    const projects: Data[] = await Project.find();
+    const projects: Data[] = await Project.find().populate("userId");
     res.status(200).json(projects);
   }
 }

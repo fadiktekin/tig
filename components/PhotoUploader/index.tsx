@@ -17,7 +17,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 import Image from "next/image";
 import { styled } from "@mui/material/styles";
-import { ChangeEvent, SetStateAction, useState } from "react";
+import { ChangeEvent, useState } from "react";
+import { getImagePreviewsFromFiles } from "@/pages/member/projects/getImagePreviewsFromFiles";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -31,83 +32,72 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 export function PhotoUploader({ onClose }: { onClose: Function }) {
-  const [imagePreviewSrc, setImagePreviewSrc] = useState<string[]>([]);
-  const [files, setFiles] = useState<any>();
-  const [imageUrls, setImageUrls] = useState<string[]>([]);
-  const [uploadInProgress, setUploadInProgress] = useState(false);
+  const [files, setFiles] = useState<File[]>([]);
+  const [imagesData, setImagesData] = useState([]);
 
-  function handleFileUploadChange(changeEvent: ChangeEvent) {
+  async function handleFileUploadChange(changeEvent: ChangeEvent) {
     const files = (changeEvent.target as HTMLInputElement).files || [];
-    setFiles(files);
-    for (const file of files) {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        setImagePreviewSrc((imgs: any) => [...imgs, reader.result]);
-      };
-      reader.onerror = () => {
-        console.log(reader.error);
-      };
-    }
+    const imgPreviews = await getImagePreviewsFromFiles(Array.from(files));
+    setImagesData(imgPreviews as any);
+    setFiles(Array.from(files));
   }
 
-  function onDelete(imgDataUrl: string) {
-    setImagePreviewSrc((prevImageSrc) =>
-      prevImageSrc.filter((img) => img !== imgDataUrl)
+  function onDelete(fileName: string) {
+    setFiles((prevFiles) => prevFiles.filter((file) => file.name !== fileName));
+    setImagesData((prevImagesData) =>
+      prevImagesData.filter(
+        (data: { fileName: string; imgDataUrl: string }) =>
+          data.fileName !== fileName
+      )
     );
-  }
-
-  async function handleUploadToCloudinary() {
-    setUploadInProgress(true);
-    const formData = new FormData();
-    const uploadedImages: string[] = [];
-    for (const file of files) {
-      formData.append("file", file);
-      formData.append("upload_preset", "amx9xk3g");
-      const response = await fetch(
-        "https://api.cloudinary.com/v1_1/dndvtlb1u/image/upload",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-      const data = await response.json();
-      uploadedImages.push(data.secure_url);
-    }
-    setImageUrls(uploadedImages);
-    setUploadInProgress(false);
   }
 
   return (
     <Dialog open>
       <div className="flex justify-between p-2">
         <DialogTitle>Upload Photos</DialogTitle>
-        <IconButton aria-label="close" onClick={() => onClose(imageUrls)}>
+        <IconButton
+          aria-label="close"
+          onClick={() => {
+            onClose();
+          }}
+        >
           <CloseIcon />
         </IconButton>
       </div>
       <DialogContent>
         <div className="border-dashed border-2 border-teaRoseSecondary p-4 mb-4">
-          {!!imagePreviewSrc.length && (
+          {!!imagesData.length && (
             <div className="flex flex-col gap-4">
-              {imagePreviewSrc.map((img) => (
-                <div className="flex" key={img}>
-                  <Image
-                    src={img}
-                    alt="Image upload"
-                    width={200}
-                    height={200}
-                    style={{
-                      objectFit: "contain",
-                      width: "auto",
-                      height: "auto",
-                    }}
-                  />
-                  <IconButton aria-label="delete" onClick={() => onDelete(img)}>
-                    <DeleteIcon />
-                  </IconButton>
-                </div>
-              ))}
+              {imagesData.map(
+                ({
+                  fileName,
+                  imgDataUrl,
+                }: {
+                  fileName: string;
+                  imgDataUrl: string;
+                }) => (
+                  <div className="flex" key={imgDataUrl}>
+                    <Image
+                      src={imgDataUrl}
+                      alt="Image upload"
+                      width={200}
+                      height={200}
+                      style={{
+                        objectFit: "contain",
+                        width: "auto",
+                        height: "auto",
+                      }}
+                    />
+                    <IconButton
+                      aria-label="delete"
+                      onClick={() => onDelete(fileName)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </div>
+                )
+              )}
             </div>
           )}
         </div>
@@ -123,24 +113,20 @@ export function PhotoUploader({ onClose }: { onClose: Function }) {
             <VisuallyHiddenInput
               type="file"
               onChange={handleFileUploadChange}
+              accept=".jpg, .jpeg, .png"
               multiple
             />
           </Button>
           <div className="relative">
             <Button
-              disabled={uploadInProgress}
               variant="contained"
               size="small"
-              onClick={() => handleUploadToCloudinary()}
+              onClick={() => {
+                onClose(files);
+              }}
             >
               Done
             </Button>
-            {uploadInProgress && (
-              <CircularProgress
-                className="absolute top-1/2 left-1/2 text-gunmetal ml-[-12px] mt-[-12px]"
-                size={24}
-              />
-            )}
           </div>
         </div>
       </DialogContent>

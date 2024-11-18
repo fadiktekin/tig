@@ -15,22 +15,41 @@ import { PhotoUploader } from "@/components/PhotoUploader";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { ProjectCreateForm } from "@/components/ProjectCreateForm";
+import { getImagePreviewsFromFiles } from "./getImagePreviewsFromFiles";
 
 function NewProject() {
   const { data: session } = useSession();
   const [showPhotoUploader, setShowPhotoUploader] = useState(false);
-  const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isPublished, setIsPublished] = useState(false);
+
+  const [files, setFiles] = useState<any>();
+  const [imagesData, setImagesData] = useState([]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setIsSubmitting(true);
-    const formData = new FormData(event.target as HTMLFormElement);
 
+    const cloudinaryFormData = new FormData();
+    const uploadedImages: string[] = [];
+    for (const file of files) {
+      cloudinaryFormData.append("file", file);
+      cloudinaryFormData.append("upload_preset", "amx9xk3g");
+      const response = await fetch(
+        "https://api.cloudinary.com/v1_1/dndvtlb1u/image/upload",
+        {
+          method: "POST",
+          body: cloudinaryFormData,
+        }
+      );
+      const data = await response.json();
+      uploadedImages.push(data.secure_url);
+    }
+
+    const formData = new FormData(event.target as HTMLFormElement);
     const projectData = Object.fromEntries(formData);
     projectData.userId = (session?.user as any).id;
-    (projectData as any)["images"] = imageUrls;
+    (projectData as any)["images"] = uploadedImages;
 
     await fetch("/api/member/projects/create", {
       method: "POST",
@@ -46,6 +65,12 @@ function NewProject() {
     } finally {
       setIsSubmitting(false);
     }
+  }
+
+  async function showImagePreviews(files: File[] = []) {
+    const imgPreviews = await getImagePreviewsFromFiles(Array.from(files));
+    setImagesData(imgPreviews as any);
+    setFiles(files);
   }
 
   function handleFileUploadChange() {
@@ -78,17 +103,25 @@ function NewProject() {
                   onClick={() => handleFileUploadChange()}
                   startIcon={<CloudUploadIcon />}
                 >
-                  Upload files
+                  Select files
                 </Button>
                 <div className="flex gap-1">
-                  {imageUrls.map((image: string) => (
-                    <Image
-                      width={100}
-                      height={100}
-                      src={image}
-                      alt="project image"
-                    />
-                  ))}
+                  {imagesData.map(
+                    ({
+                      fileName,
+                      imgDataUrl,
+                    }: {
+                      fileName: string;
+                      imgDataUrl: string;
+                    }) => (
+                      <Image
+                        width={100}
+                        height={100}
+                        src={imgDataUrl ?? "/no_image.png"}
+                        alt="project image"
+                      />
+                    )
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -98,8 +131,10 @@ function NewProject() {
       </div>
       {showPhotoUploader && (
         <PhotoUploader
-          onClose={(newUrls: string[]) => {
-            setImageUrls(newUrls);
+          onClose={(files?: File[]) => {
+            if (files) {
+              showImagePreviews(files);
+            }
             setShowPhotoUploader(false);
           }}
         />

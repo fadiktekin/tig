@@ -20,7 +20,7 @@ export function NavBar() {
     setAnchorEl(null);
   };
   return (
-    <header className="px-4 bg-white w-full border-2 border-b-teaRoseSecondary">
+    <header className="px-4 bg-white w-full border-2 border-b-teaRoseSecondary sticky top-0 z-10">
       <nav>
         <ul className="flex justify-between items-center">
           <Image
