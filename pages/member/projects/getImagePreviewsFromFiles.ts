@@ -1,5 +1,3 @@
-import { resolve } from "path";
-
 const reader = (file: File) =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
