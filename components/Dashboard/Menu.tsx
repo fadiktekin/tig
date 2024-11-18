@@ -23,7 +23,7 @@ export function Menu() {
         <ListItemButton
           selected={selectedIndex === 0}
           onClick={(event) => {
-            handleListItemClick(event, 0);
+            handleListItemClick(0);
             router.push("/member/projects");
           }}
         >
@@ -35,7 +35,7 @@ export function Menu() {
         <ListItemButton
           selected={selectedIndex === 1}
           onClick={(event) => {
-            handleListItemClick(event, 1);
+            handleListItemClick(1);
             router.push("/member/settings");
           }}
         >
