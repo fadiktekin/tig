@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, Menu, MenuItem } from "@mui/material";
+import { Avatar, Button, Menu, MenuItem } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
@@ -38,7 +38,7 @@ export function NavBar() {
                 variant="contained"
                 onClick={() => router.push("/")}
               >
-                Projects
+                Browse Projects
               </Button>
             </li>
             {!isAuthenticated && (

@@ -23,7 +23,7 @@ function NewProject() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isPublished, setIsPublished] = useState(false);
 
-  const [files, setFiles] = useState<any>();
+  const [files, setFiles] = useState<any>([]);
   const [imagesData, setImagesData] = useState([]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -85,7 +85,7 @@ function NewProject() {
       >
         <CircularProgress color="inherit" />
       </Backdrop>
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center gap-4">
         {isPublished && (
           <Alert variant="filled" severity="success">
             Your project is published!
@@ -107,17 +107,11 @@ function NewProject() {
                 </Button>
                 <div className="flex gap-1">
                   {imagesData.map(
-                    ({
-                      fileName,
-                      imgDataUrl,
-                    }: {
-                      fileName: string;
-                      imgDataUrl: string;
-                    }) => (
+                    (data: { imgDataUrl: string; fileName: string }) => (
                       <Image
                         width={100}
                         height={100}
-                        src={imgDataUrl ?? "/no_image.png"}
+                        src={data.imgDataUrl ?? "/no_image.png"}
                         alt="project image"
                       />
                     )

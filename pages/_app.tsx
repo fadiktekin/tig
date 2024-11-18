@@ -4,6 +4,8 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { SWRConfig } from "swr";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
 const theme = createTheme({
   palette: {
@@ -26,16 +28,18 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <SessionProvider session={pageProps.session}>
       <ThemeProvider theme={theme}>
-        <SWRConfig
-          value={{
-            fetcher: (resource, init) =>
-              fetch(resource, init).then((res) => res.json()),
-          }}
-        >
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </SWRConfig>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <SWRConfig
+            value={{
+              fetcher: (resource, init) =>
+                fetch(resource, init).then((res) => res.json()),
+            }}
+          >
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </SWRConfig>
+        </LocalizationProvider>
       </ThemeProvider>
     </SessionProvider>
   );

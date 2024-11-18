@@ -66,9 +66,9 @@ export function PhotoUploader({ onClose }: { onClose: Function }) {
         </IconButton>
       </div>
       <DialogContent>
-        <div className="border-dashed border-2 border-teaRoseSecondary p-4 mb-4">
+        <div className="border-dashed border-2 border-teaRoseSecondary p-6 mb-4">
           {!!imagesData.length && (
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col">
               {imagesData.map(
                 ({
                   fileName,
@@ -77,7 +77,7 @@ export function PhotoUploader({ onClose }: { onClose: Function }) {
                   fileName: string;
                   imgDataUrl: string;
                 }) => (
-                  <div className="flex" key={imgDataUrl}>
+                  <div className="flex p-4" key={imgDataUrl}>
                     <Image
                       src={imgDataUrl}
                       alt="Image upload"

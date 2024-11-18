@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+const colors = require("material-ui-colors");
 
 const config: Config = {
   content: [
@@ -19,9 +20,11 @@ const config: Config = {
         snowTertiary: "var(--snow-tertiary)",
         whiteBackgroundPrimary: "var(--white-background-primary)",
         gunmetal: "var(--gunmetal)",
+        ...colors,
       },
     },
   },
   plugins: [],
 };
+
 export default config;
