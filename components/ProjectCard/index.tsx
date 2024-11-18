@@ -7,7 +7,7 @@ export function ProjectCard({ project }: { project: any }) {
         <Image
           style={{ objectFit: "cover" }}
           fill
-          src={project.images[0]}
+          src={project.images[0] ?? "/no_image.png"}
           alt="project image"
         />
       </div>
@@ -15,7 +15,7 @@ export function ProjectCard({ project }: { project: any }) {
         <Typography variant="subtitle1" className=" bold">
           <b>{project.title}</b>
         </Typography>
-        <Typography className="">by {project.userId}</Typography>
+        <Typography className="">by {project.userId.name}</Typography>
       </div>
     </Card>
   );
