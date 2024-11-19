@@ -39,7 +39,7 @@ export default function MemberProjectDetail() {
   return (
     <Layout>
       <div className="flex justify-between mb-4">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2">
           <Typography variant="h4">{capitalizeFirstLetter(title)}</Typography>
           <StatusTag status={status} />
         </div>
@@ -50,10 +50,12 @@ export default function MemberProjectDetail() {
       <article className="flex flex-col gap-4">
         {!!images.length && (
           <Paper elevation={3} className="p-4">
-            <section className="gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <section className="flex gap-4 flex-wrap">
               {images.map((imageUrl: string) => (
                 <Image
+                  key={imageUrl}
                   src={imageUrl}
+                  priority
                   alt="project image"
                   width={200}
                   height={200}
