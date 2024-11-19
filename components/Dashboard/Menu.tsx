@@ -27,7 +27,7 @@ export function Menu() {
             router.push("/member/projects");
           }}
         >
-          <ListItemIcon className="min-w-8">
+          <ListItemIcon sx={{ minWidth: "2rem" }}>
             <FolderIcon />
           </ListItemIcon>
           <ListItemText primary="My Projects" className="text-nowrap" />
@@ -39,7 +39,7 @@ export function Menu() {
             router.push("/member/settings");
           }}
         >
-          <ListItemIcon className="min-w-8">
+          <ListItemIcon sx={{ minWidth: "2rem" }}>
             <SettingsIcon />
           </ListItemIcon>
           <ListItemText primary="Settings" className="text-nowrap" />
