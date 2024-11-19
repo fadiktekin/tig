@@ -50,7 +50,7 @@ function Projects() {
   } = useSWR(`/api/member/projects?userId=${(session?.user as any)?.id}`);
 
   const router = useRouter();
-  console.log("DATA", userProjects);
+  console.log("userProjects", userProjects);
 
   if (!userProjects) {
     return <>loading...</>;
