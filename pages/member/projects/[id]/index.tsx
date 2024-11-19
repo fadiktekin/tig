@@ -5,6 +5,7 @@ import { StatusTag } from "@/components/StatusTag";
 import Image from "next/image";
 import useSWR from "swr";
 import { capitalizeFirstLetter } from "@/components/utils/capitalizeFirstLetter";
+import { CurrencyField } from "@/components/CurrencyField";
 
 export default function MemberProjectDetail() {
   const router = useRouter();
@@ -71,13 +72,9 @@ export default function MemberProjectDetail() {
           <Typography variant="subtitle1">
             Finish date: <b>{endDate}</b>
           </Typography>
-          <Typography variant="subtitle1">
-            Expense: <b>{expense}</b>
-          </Typography>
-          <Typography variant="subtitle1">
-            Price: <b>{price}</b>
-          </Typography>
-          <Typography variant="h5" className="mt-4">
+          <CurrencyField title="Expense" value={expense} />
+          <CurrencyField title="Price" value={price} />
+          <Typography variant="h5" className="my-3">
             Description
           </Typography>
           <Typography variant="body1">{description}</Typography>
