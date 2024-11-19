@@ -12,11 +12,12 @@ import {
   Typography,
   SelectChangeEvent,
 } from "@mui/material";
-
+import dayjs, { Dayjs } from "dayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 type Props = {
   handleSubmit: FormEventHandler<HTMLFormElement>;
+  data?: FromDataType;
 };
 
 type FromDataType = {
@@ -29,10 +30,12 @@ type FromDataType = {
   expense?: number;
   price?: number;
 };
-export function ProjectCreateForm({ handleSubmit }: Props) {
-  const [formData, setFormData] = useState<FromDataType>({});
+export function ProjectCreateForm({ handleSubmit, data = {} }: Props) {
+  const [formData, setFormData] = useState<FromDataType>(data);
 
-  const handleChange = (event: SelectChangeEvent) => {
+  const handleChange = (
+    event: React.ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>
+  ) => {
     const { name, value } = event.target;
     setFormData((prevState) => ({
       ...prevState,
@@ -54,14 +57,22 @@ export function ProjectCreateForm({ handleSubmit }: Props) {
               variant="outlined"
               id="title"
               label="title"
+              value={formData.title}
               required
               name={"title"}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                handleChange(event)
+              }
             />
             <TextField
               variant="outlined"
               label="description"
               name={"description"}
+              value={formData.description}
               multiline
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                handleChange(event)
+              }
             />
             <FormControl variant="outlined">
               <InputLabel id="craft">Craft</InputLabel>
@@ -71,7 +82,7 @@ export function ProjectCreateForm({ handleSubmit }: Props) {
                 name="craft"
                 value={formData.craft}
                 label="Crochet"
-                onChange={handleChange}
+                onChange={(event) => handleChange(event)}
                 required
               >
                 <MenuItem value={"crochet"}>Crochet</MenuItem>
@@ -88,17 +99,41 @@ export function ProjectCreateForm({ handleSubmit }: Props) {
                 name="status"
                 value={formData.status}
                 label="In Progress"
-                onChange={handleChange}
+                onChange={(event) => handleChange(event)}
                 required
               >
                 <MenuItem value={"in progress"}>In Progress</MenuItem>
                 <MenuItem value={"finished"}>Finished</MenuItem>
               </Select>
             </FormControl>
-            <DatePicker label="Start date" name="startDate" />
-            <DatePicker label="End date" name="endDate" />
-            <TextField label="Expense" name="expense" type="number" />
-            <TextField label="Price" name="price" type="number" />
+            <DatePicker
+              label="Start date"
+              name="startDate"
+              value={dayjs(formData.startDate)}
+            />
+            <DatePicker
+              label="End date"
+              name="endDate"
+              value={dayjs(formData.endDate)}
+            />
+            <TextField
+              label="Expense"
+              name="expense"
+              type="number"
+              value={formData.expense}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                handleChange(event)
+              }
+            />
+            <TextField
+              label="Price"
+              name="price"
+              type="number"
+              value={formData.price}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                handleChange(event)
+              }
+            />
           </CardContent>
         </Card>
       </div>
@@ -106,7 +141,7 @@ export function ProjectCreateForm({ handleSubmit }: Props) {
         <Button
           color="secondary"
           variant="contained"
-          onClick={() => router.push("/member/projects/")}
+          onClick={() => router.back()}
         >
           Cancel
         </Button>

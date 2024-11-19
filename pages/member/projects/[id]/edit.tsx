@@ -1,6 +1,5 @@
-import { withAuth } from "@/components/withAuth";
+import { useRouter } from "next/router";
 import { Layout } from "@/components/Dashboard/Layout";
-
 import {
   Button,
   CardContent,
@@ -10,49 +9,43 @@ import {
   Alert,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { useState } from "react";
-import { PhotoUploader } from "@/components/PhotoUploader";
 import Image from "next/image";
-import { useSession } from "next-auth/react";
+import { useState } from "react";
+import useSWR from "swr";
+import { PhotoUploader } from "@/components/PhotoUploader";
+import { withAuth } from "@/components/withAuth";
 import { ProjectCreateForm } from "@/components/ProjectCreateForm";
-import { getImagePreviewsFromFiles } from "../../../components/utils/getImagePreviewsFromFiles";
 
-function NewProject() {
-  const { data: session } = useSession();
+function EditProject() {
+  const router = useRouter();
+  const { isReady } = router;
+  const { id = "" } = router.query;
+  const { data = {}, isLoading, error, mutate } = useSWR(`/api/projects/${id}`);
   const [showPhotoUploader, setShowPhotoUploader] = useState(false);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isPublished, setIsPublished] = useState(false);
 
-  const [files, setFiles] = useState<any>([]);
-  const [imagesData, setImagesData] = useState([]);
+  if (!id) {
+    return null;
+  }
+
+  if (!isReady || isLoading || error)
+    return (
+      <Layout>
+        <h2>Loading...</h2>
+      </Layout>
+    );
+  console.log(data);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setIsSubmitting(true);
 
-    const cloudinaryFormData = new FormData();
-    const uploadedImages: string[] = [];
-    for (const file of files) {
-      cloudinaryFormData.append("file", file);
-      cloudinaryFormData.append("upload_preset", "amx9xk3g");
-      const response = await fetch(
-        "https://api.cloudinary.com/v1_1/dndvtlb1u/image/upload",
-        {
-          method: "POST",
-          body: cloudinaryFormData,
-        }
-      );
-      const data = await response.json();
-      uploadedImages.push(data.secure_url);
-    }
-
     const formData = new FormData(event.target as HTMLFormElement);
     const projectData = Object.fromEntries(formData);
-    projectData.userId = (session?.user as any).id;
-    (projectData as any)["images"] = uploadedImages;
-
-    await fetch("/api/member/projects/create", {
-      method: "POST",
+    await fetch(`/api/member/projects/${id}`, {
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
@@ -65,16 +58,6 @@ function NewProject() {
     } finally {
       setIsSubmitting(false);
     }
-  }
-
-  async function showImagePreviews(files: File[] = []) {
-    const imgPreviews = await getImagePreviewsFromFiles(Array.from(files));
-    setImagesData(imgPreviews as any);
-    setFiles(files);
-  }
-
-  function handleFileUploadChange() {
-    setShowPhotoUploader(!showPhotoUploader);
   }
 
   return (
@@ -92,7 +75,7 @@ function NewProject() {
           </Alert>
         )}
         <div className="flex gap-4 flex-col items-center">
-          <div className="flex flex-col gap-4">
+          {/* <div className="flex flex-col gap-4">
             <Card className="min-w-96">
               <CardContent className="flex flex-col gap-4">
                 <Button
@@ -119,17 +102,17 @@ function NewProject() {
                 </div>
               </CardContent>
             </Card>
-          </div>
-          <ProjectCreateForm handleSubmit={handleSubmit} />
+          </div> */}
+          <ProjectCreateForm data={data} handleSubmit={handleSubmit} />
         </div>
       </div>
       {showPhotoUploader && (
         <PhotoUploader
           onClose={(files?: File[]) => {
-            if (files) {
-              showImagePreviews(files);
-            }
-            setShowPhotoUploader(false);
+            // if (files) {
+            //   showImagePreviews(files);
+            // }
+            // setShowPhotoUploader(false);
           }}
         />
       )}
@@ -137,4 +120,4 @@ function NewProject() {
   );
 }
 
-export default withAuth(NewProject);
+export default withAuth(EditProject);
