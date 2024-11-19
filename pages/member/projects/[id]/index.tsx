@@ -4,10 +4,11 @@ import { Button, Paper, Typography } from "@mui/material";
 import { StatusTag } from "@/components/StatusTag";
 import Image from "next/image";
 import useSWR from "swr";
+import { withAuth } from "@/components/withAuth";
 import { capitalizeFirstLetter } from "@/components/utils/capitalizeFirstLetter";
 import { CurrencyField } from "@/components/CurrencyField";
 
-export default function MemberProjectDetail() {
+function MemberProjectDetail() {
   const router = useRouter();
   const { isReady } = router;
   const { id = "" } = router.query;
@@ -35,7 +36,9 @@ export default function MemberProjectDetail() {
     price,
   } = data;
 
-  function handleEdit(event: React.MouseEvent<HTMLButtonElement>) {}
+  function handleEdit(event: React.MouseEvent<HTMLButtonElement>) {
+    router.push(`/member/projects/${id}/edit`);
+  }
 
   return (
     <Layout>
@@ -83,3 +86,5 @@ export default function MemberProjectDetail() {
     </Layout>
   );
 }
+
+export default withAuth(MemberProjectDetail);
