@@ -20,8 +20,14 @@ type Props = {
 };
 
 type FromDataType = {
-  status?: string;
+  title?: string;
+  description?: string;
   craft?: string;
+  status?: string;
+  startDate?: Date;
+  endDate?: Date;
+  expense?: number;
+  price?: number;
 };
 export function ProjectCreateForm({ handleSubmit }: Props) {
   const [formData, setFormData] = useState<FromDataType>({});
@@ -91,7 +97,7 @@ export function ProjectCreateForm({ handleSubmit }: Props) {
             </FormControl>
             <DatePicker label="Start date" name="startDate" />
             <DatePicker label="End date" name="endDate" />
-            <TextField label="Expense" name="espense" type="number" />
+            <TextField label="Expense" name="expense" type="number" />
             <TextField label="Price" name="price" type="number" />
           </CardContent>
         </Card>

@@ -8,8 +8,8 @@ export default async function handler(
   if (req.method === "GET") {
     try {
       const userId = req.query.userId;
-      const project = await Project.find({ userId: userId });
-      res.status(201).json(project);
+      const projects = await Project.find({ userId: userId });
+      res.status(201).json(projects);
     } catch (error: any) {
       res.status(400).json({ error: error.message });
     }

@@ -9,11 +9,13 @@ export default async function handler(
   if (req.method === "POST") {
     try {
       const projectData = req.body;
-      await Project.create({
-        images: projectData.images,
-        userId: projectData.userId,
+      const data = {
         ...projectData,
-      });
+        expense: parseInt(projectData.expense),
+        price: parseInt(projectData.price),
+      };
+
+      await Project.create(data);
 
       // const newImages = projectData.images;
       // const existingImages = project.images;

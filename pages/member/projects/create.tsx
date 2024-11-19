@@ -7,6 +7,7 @@ import {
   Card,
   Backdrop,
   CircularProgress,
+  Paper,
   Alert,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -91,7 +92,7 @@ function NewProject() {
             Your project is published!
           </Alert>
         )}
-        <div className="flex gap-4 flex-col">
+        <div className="flex gap-4 flex-col items-center">
           <div className="flex flex-col gap-4">
             <Card className="min-w-96">
               <CardContent className="flex flex-col gap-4">
