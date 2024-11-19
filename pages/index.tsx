@@ -1,7 +1,5 @@
-import Image from "next/image";
 import localFont from "next/font/local";
 import useSWR from "swr";
-import Card from "@mui/material/Card";
 import { ProjectCard } from "@/components/ProjectCard";
 
 const geistSans = localFont({

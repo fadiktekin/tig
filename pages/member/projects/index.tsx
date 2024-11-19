@@ -15,6 +15,9 @@ import {
 } from "@mui/material";
 import Image from "next/image";
 import { tableCellClasses } from "@mui/material/TableCell";
+import { useRouter } from "next/router";
+import { StatusTag } from "@/components/StatusTag";
+import { capitalizeFirstLetter } from "@/components/utils/capitalizeFirstLetter";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -27,6 +30,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 type Project = {
+  _id: string;
   title: string;
   craft: string;
   status: string;
@@ -44,11 +48,18 @@ function Projects() {
     error,
     isLoading,
   } = useSWR(`/api/member/projects?userId=${(session?.user as any)?.id}`);
+
+  const router = useRouter();
   console.log("DATA", userProjects);
 
   if (!userProjects) {
     return <>loading...</>;
   }
+
+  const handleClick = (id: string) => {
+    router.push(`/member/projects/${id}`);
+  };
+
   return (
     <Layout>
       <Typography variant="h4" className="pb-4">
@@ -59,17 +70,18 @@ function Projects() {
           <TableHead>
             <TableRow>
               <StyledTableCell>Project title</StyledTableCell>
-              <StyledTableCell align="right">Craft</StyledTableCell>
-              <StyledTableCell align="right">Status</StyledTableCell>
-              <StyledTableCell align="right">Start Date</StyledTableCell>
-              <StyledTableCell align="right">End Date</StyledTableCell>
-              <StyledTableCell align="right">Expense</StyledTableCell>
+              <StyledTableCell align="center">Craft</StyledTableCell>
+              <StyledTableCell align="center">Status</StyledTableCell>
+              <StyledTableCell align="center">Start Date</StyledTableCell>
+              <StyledTableCell align="center">End Date</StyledTableCell>
+              <StyledTableCell align="center">Expense</StyledTableCell>
               <StyledTableCell align="right">Price</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {userProjects.map(
               ({
+                _id,
                 title,
                 craft,
                 status,
@@ -79,42 +91,43 @@ function Projects() {
                 expense,
                 price,
               }: Project) => {
-                const statusClassNames =
-                  status !== "finished" ? "bg-yellow-100" : "bg-lightGreen-300";
                 return (
                   <TableRow
-                    key={title}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    hover
+                    key={_id}
+                    onClick={(event) => handleClick(_id)}
+                    sx={{
+                      "&:last-child td, &:last-child th": { border: 0 },
+                      cursor: "pointer",
+                    }}
                   >
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      className="flex items-center gap-2"
-                    >
-                      <div className="h-[45px] w-[45px] relative">
-                        <Image
-                          style={{
-                            objectFit: "cover",
-                          }}
-                          className="rounded"
-                          src={images[0] ?? "/no_image.png"}
-                          fill
-                          alt="project image"
-                        />
-                      </div>
-                      {<b>{title}</b>}
-                    </TableCell>
-                    <TableCell align="right">{craft}</TableCell>
-                    <TableCell align="right">
-                      <div
-                        className={`${statusClassNames} text-center p-2 rounded-full`}
-                      >
-                        <b>{status}</b>
+                    <TableCell component="th" scope="row">
+                      <div className="flex items-center gap-2">
+                        <div className="h-[45px] w-[45px] relative">
+                          <Image
+                            style={{
+                              objectFit: "cover",
+                            }}
+                            className="rounded"
+                            src={images[0] ?? "/no_image.png"}
+                            fill
+                            sizes="(max-width: 768px) 100vw, 33vw"
+                            alt="project image"
+                          />
+                        </div>
+
+                        {<b>{capitalizeFirstLetter(title)}</b>}
                       </div>
                     </TableCell>
-                    <TableCell align="right">{startDate}</TableCell>
-                    <TableCell align="right">{endDate}</TableCell>
-                    <TableCell align="right">{expense}</TableCell>
+                    <TableCell align="center">{craft}</TableCell>
+                    <TableCell align="center">
+                      <div className="w-full flex justify-center">
+                        <StatusTag status={status} />
+                      </div>
+                    </TableCell>
+                    <TableCell align="center">{startDate}</TableCell>
+                    <TableCell align="center">{endDate}</TableCell>
+                    <TableCell align="center">{expense}</TableCell>
                     <TableCell align="right">{price}</TableCell>
                   </TableRow>
                 );
