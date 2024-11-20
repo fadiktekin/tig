@@ -55,6 +55,7 @@ export function ProjectCreateForm({ handleSubmit, data = {} }: Props) {
 
             <TextField
               variant="outlined"
+              color="success"
               id="title"
               label="title"
               value={formData.title}
@@ -66,6 +67,7 @@ export function ProjectCreateForm({ handleSubmit, data = {} }: Props) {
             />
             <TextField
               variant="outlined"
+              color="success"
               label="description"
               name={"description"}
               value={formData.description}
@@ -84,6 +86,7 @@ export function ProjectCreateForm({ handleSubmit, data = {} }: Props) {
                 label="Crochet"
                 onChange={(event) => handleChange(event)}
                 required
+                color="success"
               >
                 <MenuItem value={"crochet"}>Crochet</MenuItem>
                 <MenuItem value={"knitting"}>Knitting</MenuItem>
@@ -101,6 +104,7 @@ export function ProjectCreateForm({ handleSubmit, data = {} }: Props) {
                 label="In Progress"
                 onChange={(event) => handleChange(event)}
                 required
+                color="success"
               >
                 <MenuItem value={"in progress"}>In Progress</MenuItem>
                 <MenuItem value={"finished"}>Finished</MenuItem>
@@ -110,13 +114,24 @@ export function ProjectCreateForm({ handleSubmit, data = {} }: Props) {
               label="Start date"
               name="startDate"
               value={dayjs(formData.startDate)}
+              slotProps={{
+                textField: {
+                  color: "success",
+                },
+              }}
             />
             <DatePicker
               label="End date"
               name="endDate"
               value={dayjs(formData.endDate)}
+              slotProps={{
+                textField: {
+                  color: "success",
+                },
+              }}
             />
             <TextField
+              color="success"
               label="Expense"
               name="expense"
               type="number"
@@ -126,6 +141,7 @@ export function ProjectCreateForm({ handleSubmit, data = {} }: Props) {
               }
             />
             <TextField
+              color="success"
               label="Price"
               name="price"
               type="number"
