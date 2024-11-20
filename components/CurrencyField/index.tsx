@@ -2,14 +2,14 @@ import { Typography } from "@mui/material";
 
 export function CurrencyField({
   value,
-  title,
+  label,
 }: {
   value: number;
-  title: string;
+  label?: string;
 }) {
   return (
     <Typography variant="subtitle1">
-      {title}:{" "}
+      {label && `${label}:  `}
       <b>
         {value.toLocaleString("de-DE", {
           style: "currency",

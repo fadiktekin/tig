@@ -18,6 +18,7 @@ import { tableCellClasses } from "@mui/material/TableCell";
 import { useRouter } from "next/router";
 import { StatusTag } from "@/components/StatusTag";
 import { capitalizeFirstLetter } from "@/components/utils/capitalizeFirstLetter";
+import { CurrencyField } from "@/components/CurrencyField";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -127,8 +128,12 @@ function Projects() {
                     </TableCell>
                     <TableCell align="center">{startDate}</TableCell>
                     <TableCell align="center">{endDate}</TableCell>
-                    <TableCell align="center">{expense}</TableCell>
-                    <TableCell align="right">{price}</TableCell>
+                    <TableCell align="center">
+                      {<CurrencyField value={parseInt(expense)} />}
+                    </TableCell>
+                    <TableCell align="right">
+                      {<CurrencyField value={parseInt(expense)} />}
+                    </TableCell>
                   </TableRow>
                 );
               }

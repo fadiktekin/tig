@@ -18,7 +18,7 @@ export function Menu() {
   };
 
   return (
-    <aside className="h-full bg-creamBackgroundTertiary border-r-2 border-r-accent">
+    <aside className="h-full bg-whiteBackgroundPrimary border-r-2 border-r-accent">
       <List component="nav" aria-label="main projects settings">
         <ListItemButton
           selected={selectedIndex === 0}

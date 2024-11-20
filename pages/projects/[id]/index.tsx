@@ -60,8 +60,8 @@ export default function ProjectDetails() {
             <Typography variant="subtitle1">
               Finish date: <b>{endDate}</b>
             </Typography>
-            <CurrencyField title="Expense" value={expense} />
-            <CurrencyField title="Price" value={price} />
+            <CurrencyField label="Expense" value={expense} />
+            <CurrencyField label="Price" value={price} />
             <Typography variant="h5" className="my-3">
               Description
             </Typography>
