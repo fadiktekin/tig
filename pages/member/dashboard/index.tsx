@@ -1,8 +1,10 @@
 import { useSession } from "next-auth/react";
 import { Layout } from "@/components/Dashboard/Layout";
 import { withAuth } from "@/components/withAuth";
-import { Typography } from "@mui/material";
+import { Paper, Typography } from "@mui/material";
 import Image from "next/image";
+import { StatusTag } from "@/components/StatusTag";
+import ColorScale from "@/components/ColorScale";
 
 function Dashboard() {
   const { data: session } = useSession();
@@ -20,6 +22,13 @@ function Dashboard() {
         priority
         style={{ objectFit: "contain", width: "auto", height: "auto" }}
       />
+      <Paper elevation={3} className="my-4 p-4">
+        <Typography variant="h6">Overview</Typography>
+        <div>
+          You have <b>2</b> projects <StatusTag status={"in progress"} />
+        </div>
+        <ColorScale />
+      </Paper>
     </Layout>
   );
 }
