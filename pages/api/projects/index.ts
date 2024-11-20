@@ -2,6 +2,7 @@
 import dbConnect from "@/db/connect";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Project } from "@/db/models/Project";
+import { User } from "@/db/models/User";
 
 type Data = {
   [key: string]: any;
