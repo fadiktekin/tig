@@ -14,6 +14,8 @@ export const authOptions = {
   callbacks: {
     async session({ session, token, user }) {
       // Send properties to the client, like an access_token from a provider.
+      await dbConnect();
+
       const sessionUser = await User.findOne({ email: session.user.email });
       session.user.id = sessionUser._id;
       session.accessToken = token.accessToken;

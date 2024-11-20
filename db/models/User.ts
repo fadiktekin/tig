@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { Project } from "./Project";
 
 const { Schema } = mongoose;
 
